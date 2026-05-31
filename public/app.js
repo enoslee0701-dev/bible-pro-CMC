@@ -24,6 +24,7 @@ const els = {
   emptyHint: document.getElementById("emptyHint"),
   clearBtn: document.getElementById("clearBtn"),
   note: document.getElementById("note"),
+  modeBanner: document.getElementById("modeBanner"),
 };
 
 const state = {
@@ -298,6 +299,35 @@ function clearError() {
   els.note.classList.remove("error");
 }
 
+async function loadConfig() {
+  let cfg;
+  try {
+    cfg = await fetch("/api/config").then((r) => r.json());
+  } catch {
+    cfg = { mode: "free", autofix: false };
+  }
+  state.mode = cfg.mode;
+
+  if (cfg.mode === "ai") {
+    els.modeBanner.textContent =
+      "🤖 AI 模式 · Claude 实时翻译，「AI 自动修复」已启用";
+    els.modeBanner.className = "mode-banner ai";
+  } else {
+    els.modeBanner.textContent =
+      "🆓 免费模式 · 普通机器翻译（无需密钥）。「AI 自动修复」需配置 API 密钥后才可用。";
+    els.modeBanner.className = "mode-banner free";
+
+    // Disable the AI auto-fix toggle — it has no effect without a key.
+    els.autofixToggle.checked = false;
+    els.autofixToggle.disabled = true;
+    const span = els.autofixToggle.nextElementSibling;
+    if (span) span.textContent = "AI 自动修复（需密钥）";
+    const wrap = els.autofixToggle.closest(".toggle");
+    if (wrap) wrap.style.opacity = "0.5";
+  }
+  els.modeBanner.hidden = false;
+}
+
 async function loadLanguages() {
   const langs = await fetch("/api/languages").then((r) => r.json());
   for (const lang of langs) {
@@ -329,7 +359,7 @@ function init() {
   els.liveBox.style.display = "none";
 }
 
-loadLanguages()
+Promise.all([loadLanguages(), loadConfig()])
   .then(() => {
     init();
     state.recognition = setupRecognition();

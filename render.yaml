@@ -1,6 +1,10 @@
 # Render.com Blueprint — one-click deploy of the AI interpreter.
-# In Render: New + > Blueprint > pick this repo. Render reads this file,
-# then asks you to fill in ANTHROPIC_API_KEY before the first deploy.
+# In Render: New + > Blueprint > pick this repo. Render reads this file and
+# deploys. No API key required — it runs in FREE mode (keyless machine
+# translation) out of the box.
+#
+# To upgrade to full AI mode (Claude translation + AI auto-fix), add an
+# ANTHROPIC_API_KEY environment variable in the Render dashboard after deploy.
 services:
   - type: web
     name: ai-interpreter
@@ -10,10 +14,15 @@ services:
     startCommand: npm start
     healthCheckPath: /api/languages
     envVars:
-      # Paste your Anthropic API key here in the Render dashboard (kept secret).
+      # OPTIONAL — leave unset for free mode. Set it to enable Claude + AI
+      # auto-fix. (Kept secret; not stored in the repo.)
       - key: ANTHROPIC_API_KEY
         sync: false
-      # Lowest-latency model for a live feed. Change to claude-sonnet-4-6 or
-      # claude-opus-4-8 for higher translation quality at the cost of latency.
+      # Only used when ANTHROPIC_API_KEY is set. claude-haiku-4-5 = lowest
+      # latency; claude-sonnet-4-6 / claude-opus-4-8 = higher quality.
       - key: MODEL
         value: claude-haiku-4-5
+      # OPTIONAL — a contact email raises the free translation provider's
+      # anonymous daily quota. Leave unset if you don't need it.
+      - key: MYMEMORY_EMAIL
+        sync: false

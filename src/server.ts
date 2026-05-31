@@ -7,8 +7,10 @@ import { dirname, join } from "node:path";
 
 import { LANGUAGES } from "./languages.js";
 import {
-  translateSegment,
+  translate,
   autoFixSegments,
+  MODE,
+  AUTOFIX_AVAILABLE,
   type ContextSegment,
 } from "./interpreter.js";
 import type { ClientMessage, ServerMessage } from "./protocol.js";
@@ -16,19 +18,17 @@ import type { ClientMessage, ServerMessage } from "./protocol.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT) || 3000;
 
-if (!process.env.ANTHROPIC_API_KEY) {
-  console.warn(
-    "[warn] ANTHROPIC_API_KEY is not set — translation calls will fail. " +
-      "Copy .env.example to .env and add your key.",
-  );
-}
-
 const app = express();
 app.use(express.static(join(__dirname, "..", "public")));
 
 // Expose the language list so the client and server never drift apart.
 app.get("/api/languages", (_req, res) => {
   res.json(LANGUAGES);
+});
+
+// Tell the client which mode we're in so it can adapt the UI.
+app.get("/api/config", (_req, res) => {
+  res.json({ mode: MODE, autofix: AUTOFIX_AVAILABLE });
 });
 
 const httpServer = createServer(app);
@@ -57,7 +57,7 @@ wss.on("connection", (ws) => {
 
     if (msg.type === "translate") {
       try {
-        const translation = await translateSegment(
+        const translation = await translate(
           {
             text: msg.text,
             sourceLang: msg.sourceLang,
@@ -116,5 +116,10 @@ function errorMessage(err: unknown): string {
 }
 
 httpServer.listen(PORT, () => {
-  console.log(`\n  AI Simultaneous Interpreter running at http://localhost:${PORT}\n`);
+  const mode =
+    MODE === "ai"
+      ? "AI mode (Claude translation + auto-fix)"
+      : "FREE mode (keyless machine translation, AI auto-fix disabled)";
+  console.log(`\n  AI Simultaneous Interpreter — ${mode}`);
+  console.log(`  http://localhost:${PORT}\n`);
 });

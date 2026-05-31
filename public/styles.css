@@ -179,6 +179,24 @@ select {
   }
 }
 
+.mode-banner {
+  margin: 0 auto;
+  max-width: 980px;
+  width: 100%;
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.mode-banner.free {
+  color: var(--fix);
+  background: rgba(245, 177, 76, 0.08);
+}
+.mode-banner.ai {
+  color: var(--accent-2);
+  background: rgba(52, 211, 153, 0.08);
+}
+
 .stage {
   flex: 1;
   padding: 22px 24px;
