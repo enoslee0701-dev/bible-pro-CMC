@@ -1,0 +1,19 @@
+# Render.com Blueprint — one-click deploy of the AI interpreter.
+# In Render: New + > Blueprint > pick this repo. Render reads this file,
+# then asks you to fill in ANTHROPIC_API_KEY before the first deploy.
+services:
+  - type: web
+    name: ai-interpreter
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/languages
+    envVars:
+      # Paste your Anthropic API key here in the Render dashboard (kept secret).
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      # Lowest-latency model for a live feed. Change to claude-sonnet-4-6 or
+      # claude-opus-4-8 for higher translation quality at the cost of latency.
+      - key: MODEL
+        value: claude-haiku-4-5

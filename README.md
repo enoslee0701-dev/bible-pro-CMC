@@ -66,6 +66,27 @@ Open <http://localhost:3000>, pick your source/target languages, click
 > best in desktop **Chrome** or **Edge**. Translation and auto-fix work in any
 > browser, but the microphone capture needs a Chromium-based browser.
 
+## 在手机上使用（安卓）· Deploy from your phone
+
+The app is a server + browser front-end, so you deploy it once and then open
+the URL on your phone. **Speech input works in Android Chrome** (iOS Safari does
+not support the Web Speech API). One-click deploy with the included
+`render.yaml`:
+
+1. 在手机浏览器打开 <https://render.com>，用 GitHub 账号登录。
+2. 点 **New +** → **Blueprint**，选择这个仓库
+   (`enoslee0701-dev/bible-pro-cmc`)，分支
+   `claude/ai-simultaneous-interpretation-EbIqQ`。
+3. Render 会读取 `render.yaml`，提示你填 **ANTHROPIC_API_KEY** —— 粘贴你的
+   Anthropic API 密钥（在 <https://console.anthropic.com> 获取），点 **Apply**。
+4. 等几分钟部署完成，会得到一个网址，例如
+   `https://ai-interpreter-xxxx.onrender.com`。
+5. 用**安卓 Chrome**打开该网址 → 选语言 → 点「开始传译」→ 允许麦克风权限 → 说话。
+
+> 提示：Render 免费套餐闲置后会休眠，第一次访问可能要等 ~30 秒唤醒，之后就正常了。
+> 想要更高翻译质量，可在 Render 的环境变量里把 `MODEL` 改成
+> `claude-sonnet-4-6` 或 `claude-opus-4-8`（会略增延迟）。
+
 ## Configuration
 
 | Variable            | Default            | Description                                              |
