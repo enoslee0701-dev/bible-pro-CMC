@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 同声传译 · Real-time AI Interpreter</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo">🎙️</span>
+        <div>
+          <h1>AI 同声传译</h1>
+          <p class="subtitle">Real-time interpretation with AI auto-repair</p>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">未连接</span>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="lang-pair">
+        <label>
+          源语言 · From
+          <select id="sourceLang"></select>
+        </label>
+        <button id="swapBtn" class="swap" title="交换语言">⇄</button>
+        <label>
+          目标语言 · To
+          <select id="targetLang"></select>
+        </label>
+      </div>
+
+      <div class="toggles">
+        <label class="toggle">
+          <input type="checkbox" id="autofixToggle" checked />
+          <span>AI 自动修复</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="ttsToggle" />
+          <span>朗读译文 · Speak</span>
+        </label>
+      </div>
+
+      <button id="micBtn" class="mic" disabled>
+        <span class="mic-icon">🎤</span>
+        <span id="micLabel">开始传译</span>
+      </button>
+    </section>
+
+    <main class="stage">
+      <div class="live" id="liveBox">
+        <span class="live-label">正在聆听…</span>
+        <span class="live-text" id="liveText"></span>
+      </div>
+
+      <div class="transcript" id="transcript"></div>
+
+      <div class="empty" id="emptyHint">
+        点击“开始传译”，对着麦克风说话，译文会实时出现。<br />
+        AI 会在后台自动修正语音识别与翻译中的错误。
+      </div>
+    </main>
+
+    <footer class="footer">
+      <button id="clearBtn" class="ghost">清空</button>
+      <span class="note" id="note"></span>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
